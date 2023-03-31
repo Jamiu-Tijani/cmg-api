@@ -1,0 +1,1 @@
+web: gunicorn 'cmg_api.wsgi'

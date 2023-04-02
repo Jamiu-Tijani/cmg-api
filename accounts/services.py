@@ -4,7 +4,7 @@ import pyotp
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.shortcuts import redirect
-
+import uuid
 from decouple import config
 
 from rest_framework.authtoken.models import Token
@@ -29,24 +29,24 @@ class AccountService:
         self.user_model = Account
         self.token_model = Token
 
-    def user_exists(self, email=""):
+    def user_exists(self, email="", username=""):
         """
         Checks if a username or email exists.
         """
-        return self.user_model.objects.filter(Q(email=email)).exists()
+        return self.user_model.objects.filter(Q(email=email) | Q(username=username)).exists()
 
     def create_user(self, request, **kwargs):
         password = kwargs.get('password')
         email = kwargs.get('email')
-        username = ''
+        username = str(uuid.uuid64())
 
         if not validate_email_(email):
             return dict(error=ErrorMessages.INVALID_EMAIL)
-        if self.user_exists(email):
+        if self.user_exists(email, username):
             return dict(error=ErrorMessages.ACCOUNT_ALREADY_EXISTS, status=409)
 
         # create the user and hash the password
-        user = self.user_model.objects.create(email=email)
+        user = self.user_model.objects.create(username=username, email=email)
         user.set_password(password)
         user.save()
 

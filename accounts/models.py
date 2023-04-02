@@ -32,8 +32,7 @@ class Account(User, Timestamp):
         (GENDER_FEMALE, "Female"),
         (OTHER, "Other"),
     )
-    username = models.CharField(null=True,blank=True, max_length=255)
-    owner_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    owner_id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     profile_picture = CloudinaryField('image')
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
     about = models.TextField(blank=True, null=True)

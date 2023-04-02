@@ -29,7 +29,7 @@ class AccountService:
         self.user_model = Account
         self.token_model = Token
 
-    def user_exists(self, email="", username=""):
+    def user_exists(self, email=""):
         """
         Checks if a username or email exists.
         """
@@ -42,11 +42,11 @@ class AccountService:
 
         if not validate_email_(email):
             return dict(error=ErrorMessages.INVALID_EMAIL)
-        if self.user_exists(email, username):
+        if self.user_exists(email):
             return dict(error=ErrorMessages.ACCOUNT_ALREADY_EXISTS, status=409)
 
         # create the user and hash the password
-        user = self.user_model.objects.create(username=username, email=email)
+        user = self.user_model.objects.create(email=email)
         user.set_password(password)
         user.save()
 

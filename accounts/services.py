@@ -38,7 +38,7 @@ class AccountService:
     def create_user(self, request, **kwargs):
         password = kwargs.get('password')
         email = kwargs.get('email')
-        username = str(uuid.uuid64())
+        username = str(uuid.uuid4())
 
         if not validate_email_(email):
             return dict(error=ErrorMessages.INVALID_EMAIL)

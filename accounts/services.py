@@ -33,7 +33,7 @@ class AccountService:
         """
         Checks if a username or email exists.
         """
-        return self.user_model.objects.filter(Q(email=email) | Q(username=username)).exists()
+        return self.user_model.objects.filter(Q(email=email)).exists()
 
     def create_user(self, request, **kwargs):
         password = kwargs.get('password')

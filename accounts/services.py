@@ -89,7 +89,8 @@ class AccountService:
     def update_user_profile(self, request, **kwargs):
         user = self.user_model.objects.get(email=request.user.email)
         print(user)
-        return dict(success=SuccessMessages.ACCOUNT_LOGOUT_SUCCESSFUL)
+        print(kwargs)
+        return dict(success="Update Successful")
     
 
 

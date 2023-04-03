@@ -119,7 +119,7 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
         if errors:
             return errors
 
-        response = AccountService().update_user_profile(request,**serialized_data)
+        response = AccountService().update_user_profile(request,**serialized_data.validated_data)
         return self.response(response)
 
     @action(detail=False, methods=["post"], url_path="external-social-auth", permission_classes=[AllowAny])
@@ -135,7 +135,7 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
         if errors:
             return errors
 
-        response = ExternalAuthServices().register_social_user(**serialized_data)
+        response = ExternalAuthServices().register_social_user(**serialized_data.validated_data)
         return self.response(response)
 
 

@@ -97,8 +97,8 @@ class AccountService:
             user.last_name = last_name
         if profile_picture is not None:
             user.profile_picture = profile_picture
-        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_" or x != "profile_picture"}
-        user_profile["image"] = user.image_url
+        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+        user_profile["profile_picture"] = user.image_url
         user.save()
 
         return dict(success="User Profile Updated Successfully" ,status=200,data=user_profile)

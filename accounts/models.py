@@ -43,7 +43,7 @@ class Account(User, Timestamp):
     
     @property
     def image_url(self):
-        return self.image.url
+        return self.profile_picture.url if self.profile_picture else None
     
     @property
     def last_seen(self):

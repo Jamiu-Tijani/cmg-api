@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from rest_framework import serializers
 from accounts.social_lib import google
-from .services import ExternalServices
+from .services import ExternalAuthServices
 from rest_framework.exceptions import AuthenticationFailed
 
 

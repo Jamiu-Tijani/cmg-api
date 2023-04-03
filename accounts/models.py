@@ -32,6 +32,7 @@ class Account(User, Timestamp):
         (GENDER_FEMALE, "Female"),
         (OTHER, "Other"),
     )
+    auth_provider = models.CharField(default="cmg",max_length=20)
     owner_id = models.UUIDField(default=uuid.uuid4, editable=False)
     profile_picture = CloudinaryField('image')
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
@@ -39,7 +40,11 @@ class Account(User, Timestamp):
 
     def __str__(self):
         return "%s" % self.user.username
-
+    
+    @property
+    def image_url(self):
+        return self.image.url
+    
     @property
     def last_seen(self):
         return cache.get(f"seen_{self.user.username}")

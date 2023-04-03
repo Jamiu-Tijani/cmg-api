@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
 from .serializers import inline_serializer
-from .services import AccountService, OTPServices
+from .services import AccountService, OTPServices, ExternalAuthServices
 from .mixins import CustomResponseMixin
 
 
@@ -73,7 +73,7 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
         if errors:
             return errors
 
-        response = OTPServices.send_verification_email  (**serialized_data.validated_data)
+        response = OTPServices.send_verification_email(**serialized_data.validated_data)
         return self.response(response)
 
     @action(detail=False, methods=["post"], url_path="reset-password", permission_classes=[AllowAny])
@@ -104,6 +104,38 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
             return errors
 
         response = OTPServices.reset_password(**serialized_data.validated_data)
+        return self.response(response)
+
+    @action(detail=False, methods=["post"], url_path="update-account-profile", permission_classes=[IsAuthenticated])
+    def update_profile(self, request):
+        serialized_data = inline_serializer(
+            fields={
+                "first_name": serializers.CharField(max_length=50,required=False),
+                "last_name": serializers.CharField(max_length=50,required=False),
+                "profile_picture": serializers.ImageField(required=False),
+            },
+            data=request.data)
+        errors = self.validate_serializer(serialized_data)
+        if errors:
+            return errors
+
+        response = AccountService().update_user_profile(request,**serialized_data)
+        return self.response(response)
+
+    @action(detail=False, methods=["post"], url_path="external-social-auth", permission_classes=[AllowAny])
+    def external_social_auth(self, request):
+        serialized_data = inline_serializer(
+            fields={
+                "provider": serializers.CharField(max_length=6),         
+                "email": serializers.CharField(max_length=50),
+                "auth_token": serializers.CharField(max_length=50),
+            },
+            data=request.data)
+        errors = self.validate_serializer(serialized_data)
+        if errors:
+            return errors
+
+        response = ExternalAuthServices().register_social_user(**serialized_data)
         return self.response(response)
 
 

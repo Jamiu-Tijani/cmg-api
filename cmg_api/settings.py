@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -149,5 +150,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 CORS_ORIGIN_ALLOW_ALL = True
-GOOGLE_CLIENT_ID = "<CLIENT_ID>"
-SOCIAL_SECRET = "<SOCIAL_SECRET>"
+GOOGLE_CLIENT_ID = "430224869790-di9uisdb5mak2chfb957dgkcshu820k6.apps.googleusercontent.com"
+SOCIAL_SECRET = "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"
+cloudinary.config(
+    cloud_name='djeybuv2z',
+    api_key='513489842814459',
+    api_secret='wFvJjOjk2Ugm4T27f_aotu_zl_M',
+)

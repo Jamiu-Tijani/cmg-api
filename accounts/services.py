@@ -86,6 +86,11 @@ class AccountService:
         logout(request)
         return dict(success=SuccessMessages.ACCOUNT_LOGOUT_SUCCESSFUL)
     
+    def update_user_profile(self, request, **kwargs):
+        user = self.user_model.objects.get(user=request.user)
+        print(user)
+        return dict(success=SuccessMessages.ACCOUNT_LOGOUT_SUCCESSFUL)
+    
 
 
 class OTPServices:
@@ -191,10 +196,14 @@ class OTPServices:
 
 
 
-class ExternalServices:
+class ExternalAuthServices:
+    def __init__(self):
+        self.user_model = Account
+        self.token_model = Token
 
-    def register_social_user(provider, user_id, email, name):
-        filtered_user_by_email = User.objects.filter(email=email)
+    def register_social_user(self, provider,  email, auth_token):
+
+        filtered_user_by_email = self.user_model.objects.filter(email=email)
 
         if filtered_user_by_email.exists():
             if provider == filtered_user_by_email[0].auth_provider:
@@ -221,7 +230,7 @@ class ExternalServices:
                 'username': email, 'email': email,
                 'password': settings.SOCIAL_SECRET
             }
-            user = User.objects.create_user(**user)
+            user = self.user_model.objects.create_user(**user)
             user.is_active = True
             user.auth_provider = provider
             user.save()

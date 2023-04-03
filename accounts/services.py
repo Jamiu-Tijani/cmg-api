@@ -87,10 +87,21 @@ class AccountService:
         return dict(success=SuccessMessages.ACCOUNT_LOGOUT_SUCCESSFUL)
     
     def update_user_profile(self, request, **kwargs):
+        first_name = kwargs.get("first_name") if kwargs.get("first_name") else None
+        last_name = kwargs.get("last_name") if kwargs.get("last_name") else None
+        profile_picture = kwargs.get("profile_picture") if kwargs.get("profile_picture")  else None
         user = self.user_model.objects.get(email=request.user.email)
-        print(user)
-        print(kwargs)
-        return dict(success="Update Successful")
+        if first_name is not None:
+            user.first_name = first_name
+        if last_name is not None:
+            user.last_name = last_name
+        if profile_picture is not None:
+            user.profile_picture = profile_picture
+        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+        user_profile["image"] = user.image_url
+        user.save()
+
+        return dict(success="User Profile Updated Successfully" ,status=200,data=user_profile)
     
 
 

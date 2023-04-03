@@ -107,7 +107,7 @@ class AccountService:
         data["profile_picture"] = user_profile["profile_picture"]
         user.save()
 
-        return dict(success="User Profile Updated Successfully" ,status=200,data=user_profile)
+        return dict(success="User Profile Updated Successfully" ,status=200,data=data)
     
 
 

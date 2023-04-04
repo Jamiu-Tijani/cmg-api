@@ -266,29 +266,35 @@ class ExternalAuthServices:
         self.user_model = Account
         self.token_model = Token
 
-    def register_social_user(self, provider,  email, auth_token):
+    def register_social_user(self,request, **kwargs):
+        email = kwargs.get("email")
+        provider = kwargs.get("provider")
 
         filtered_user_by_email = self.user_model.objects.filter(email=email)
 
         if filtered_user_by_email.exists():
             if provider == filtered_user_by_email[0].auth_provider:
-                new_user = User.objects.get(email=email)
+                new_user = self.user_model.objects.get(email=email)
 
-                registered_user = User.objects.get(email=email)
+                registered_user = self.user_model.objects.get(email=email)
                 registered_user.check_password(settings.SOCIAL_SECRET)
+                user_logged_in.send(sender=user.__class__, request=request, user=user)
+                token, created = self.token_model.objects.get_or_create(user=user)
+                user = registered_user
+                user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+                user_profile["profile_picture"] = user.image_url
+                data = {}
+                data["email"] = user_profile["email"]
+                data["first_name"] = user_profile["first_name"]
+                data["last_name"] = user_profile["last_name"]
+                data["profile_picture"] = user_profile["profile_picture"]
+                data.update({'token': token.key})
 
-                Token.objects.filter(user=registered_user).delete()
-                Token.objects.create(user=registered_user)
-                new_token = list(Token.objects.filter(
-                    user_id=registered_user).values("key"))
-
-                return {
-                    'email': registered_user.email,
-                    'tokens': str(new_token[0]['key'])}
+                return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL,status=200,data=data)
 
             else:
-                raise AuthenticationFailed(
-                    detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+                return dict(error='Please continue your login using ' + filtered_user_by_email[0].auth_provider,status=401,data=data)
+
 
         else:
             user = {
@@ -298,13 +304,18 @@ class ExternalAuthServices:
             user = self.user_model.objects.create_user(**user)
             user.is_active = True
             user.auth_provider = provider
+            user.set_password(settings.SOCIAL_SECRET)
             user.save()
-            new_user = User.objects.get(email=email)
-            new_user.check_password(settings.SOCIAL_SECRET)
-            Token.objects.create(user=new_user)
-            new_token = list(Token.objects.filter(user_id=new_user).values("key"))
-            return {
-                'email': new_user.email,
-                'username': new_user.username,
-                'tokens': str(new_token[0]['key']),
-            }
+            token, created = self.token_model.objects.get_or_create(user=user)
+            user = registered_user
+            user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+            user_profile["profile_picture"] = user.image_url
+            data = {}
+            data["email"] = user_profile["email"]
+            data["first_name"] = user_profile["first_name"]
+            data["last_name"] = user_profile["last_name"]
+            data["profile_picture"] = user_profile["profile_picture"]
+            data.update({'token': token.key})
+            
+            return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL,status=200,data=data)
+

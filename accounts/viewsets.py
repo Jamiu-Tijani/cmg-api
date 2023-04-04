@@ -126,9 +126,8 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
     def external_social_auth(self, request):
         serialized_data = inline_serializer(
             fields={
-                "provider": serializers.CharField(max_length=6),         
+                "provider": serializers.CharField(max_length=20),         
                 "email": serializers.CharField(max_length=50),
-                "auth_token": serializers.CharField(max_length=50),
             },
             data=request.data)
         errors = self.validate_serializer(serialized_data)

@@ -131,6 +131,27 @@ class AccountService:
         user = self.user_model.objects.get(email=email)
         user.delete()
         return dict(success="User Account Deleted Successfully" ,status=200)
+    
+    def change_password(self, request, **kwargs):
+        new_password=kwargs.get('new_password')
+        old_password=kwargs.get('old_password')
+        email = request.user.email
+        user = self.user_model.objects.get(email=email)
+        if not user.check_password(old_password):
+            return dict(error="Incorrect Password" ,status=401)
+        user.set_password(new_password)
+        user.save()
+        user = self.user_model.objects.get(email=request.user.email)
+        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+        user_profile["profile_picture"] = user.image_url
+        data = {}
+        data["email"] = user_profile["email"]
+        data["first_name"] = user_profile["first_name"]
+        data["last_name"] = user_profile["last_name"]
+        data["profile_picture"] = user_profile["profile_picture"]
+        return dict(success="User Account Password Changed Successfully" ,status=200,data=data)
+
+        
 
 
 

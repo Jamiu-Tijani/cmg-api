@@ -143,3 +143,19 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
     def delete_account(self, request):
         response = AccountService().delete_account(request)
         return self.response(response)
+    @action(detail=False, methods=["post"], url_path="change-password", permission_classes=[IsAuthenticated])
+    def change_password(self, request):
+        serialized_data = inline_serializer(
+            fields={
+                "old_password": serializers.CharField(max_length=30),         
+                "new_password": serializers.CharField(max_length=30),         
+
+            },
+            data=request.data)
+        errors = self.validate_serializer(serialized_data)
+
+        if errors:
+            return errors
+
+        response = AccountService().change_password(request,**serialized_data.validated_data)
+        return self.response(response)

@@ -139,3 +139,7 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
         return self.response(response)
 
 
+    @action(detail=False, methods=["post"], url_path="delete", permission_classes=[IsAuthenticated])
+    def delete_account(self, request):
+        response = AccountService().delete_account(request)
+        return self.response(response)

@@ -49,18 +49,27 @@ class AccountService:
         user = self.user_model.objects.create(username=username, email=email)
         user.set_password(password)
         user.save()
-
+        user = self.user_model.objects.get(email=email)
+        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+        user_profile["profile_picture"] = user.image_url
+        data = {}
+        data["email"] = user_profile["email"]
+        data["first_name"] = user_profile["first_name"]
+        data["last_name"] = user_profile["last_name"]
+        data["profile_picture"] = user_profile["profile_picture"]
         # Automatically authenticate the user
         login(request, user)
         user_logged_in.send(sender=user.__class__, request=request, user=user)
         token, created = self.token_model.objects.get_or_create(user=user)
 
 
-        data = {'token': token.key,"email":email}
+        user_data = {'token': token.key,"email":email}
+        user_data.update(data)
+
 
         response = dict(success=SuccessMessages.ACCOUNT_CREATED)
 
-        return dict(**response, data=data)
+        return dict(**response, data=user_data)
 
     def authenticate_user(self, request, **kwargs):
         username = kwargs.get('email')
@@ -75,6 +84,14 @@ class AccountService:
         login(request, user)
         user_logged_in.send(sender=user.__class__, request=request, user=user)
         token, created = self.token_model.objects.get_or_create(user=user)
+        user = self.user_model.objects.get(email=request.user.email)
+        user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
+        user_profile["profile_picture"] = user.image_url
+        data = {}
+        data["email"] = user_profile["email"]
+        data["first_name"] = user_profile["first_name"]
+        data["last_name"] = user_profile["last_name"]
+        data["profile_picture"] = user_profile["profile_picture"]
         data = {'token': token.key}
         return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL, data=data, status=200)
 
@@ -108,6 +125,15 @@ class AccountService:
         data["profile_picture"] = user_profile["profile_picture"]
 
         return dict(success="User Profile Updated Successfully" ,status=200,data=data)
+
+    def delete_account(self, request):
+        email = request.user.email
+        user = self.user_model.objects.get(email=email)
+        user.delete()
+        return dict(success="User Account Deleted Successfully" ,status=200)
+
+
+
     
 
 

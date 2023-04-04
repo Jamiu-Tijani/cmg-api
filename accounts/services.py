@@ -278,9 +278,9 @@ class ExternalAuthServices:
 
                 registered_user = self.user_model.objects.get(email=email)
                 registered_user.check_password(settings.SOCIAL_SECRET)
-                user_logged_in.send(sender=user.__class__, request=request, user=user)
                 token, created = self.token_model.objects.get_or_create(user=user)
                 user = registered_user
+                user_logged_in.send(sender=user.__class__, request=request, user=user)
                 user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}
                 user_profile["profile_picture"] = user.image_url
                 data = {}

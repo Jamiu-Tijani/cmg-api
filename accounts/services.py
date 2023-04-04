@@ -92,8 +92,8 @@ class AccountService:
         data["first_name"] = user_profile["first_name"]
         data["last_name"] = user_profile["last_name"]
         data["profile_picture"] = user_profile["profile_picture"]
-        data['token']: token.key
-        return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL, status=200,data=data)
+        data.update({'token': token.key})
+        return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL, data=data, status=200)
 
     @staticmethod
     def user_logout(request):

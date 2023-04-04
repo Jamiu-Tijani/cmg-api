@@ -293,7 +293,7 @@ class ExternalAuthServices:
                 return dict(success=SuccessMessages.ACCOUNT_LOGIN_SUCCESSFUL,status=200,data=data)
 
             else:
-                return dict(error='Please continue your login using ' + filtered_user_by_email[0].auth_provider,status=401,data=data)
+                return dict(error='Please continue your login using ' + filtered_user_by_email[0].auth_provider,status=401)
 
 
         else:
@@ -306,6 +306,7 @@ class ExternalAuthServices:
             user.auth_provider = provider
             user.set_password(settings.SOCIAL_SECRET)
             user.save()
+            user_logged_in.send(sender=user.__class__, request=request, user=user)
             token, created = self.token_model.objects.get_or_create(user=user)
             user = registered_user
             user_profile = {x: user.__dict__[x] for x in user.__dict__.keys() if x[0] != "_"}

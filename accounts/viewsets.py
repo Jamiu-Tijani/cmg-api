@@ -130,11 +130,13 @@ class UserAuthenticationViewSet(CustomResponseMixin, viewsets.ViewSet):
                 "email": serializers.CharField(max_length=50),
             },
             data=request.data)
+        
         errors = self.validate_serializer(serialized_data)
+
         if errors:
             return errors
 
-        response = ExternalAuthServices().register_social_user(**serialized_data.validated_data)
+        response = ExternalAuthServices().register_social_user(request,**serialized_data.validated_data)
         return self.response(response)
 
 

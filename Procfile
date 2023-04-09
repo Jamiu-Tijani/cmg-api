@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn cmg_api.wsgi
+web: python manage.py makemigrations && python manage.py migrate && gunicorn cmg_api.wsgi

@@ -5,7 +5,7 @@ class InstagramService:
     def __init__(self):
     
         self.cl = Client()
-        self.cl.login("cmg_the_label_", "@cmgthelabel4real")
+        self.cl.login("cmgthelabel__", "@cmgthelabel4real")
     
     def get_stories(self, **kwargs):
         username = list(kwargs.get("username").split(","))

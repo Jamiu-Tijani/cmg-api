@@ -1,26 +1,21 @@
 from instagrapi import Client
 from .scraper import scrape_latest_video
-
+from .rapidapi import InstagramApi
 class InstagramService:
     def __init__(self):
-    
-        self.cl = Client()
-        self.cl.login("cmgthelabel__", "@cmgthelabel4real")
+        self.s = ""
     
     def get_stories(self, **kwargs):
         username = list(kwargs.get("username").split(","))
-        cl = self.cl
         print(username)
         try:
             user_stories = {}
             for user in username:
-                user_id = cl.user_id_from_username(user)
                 try:
-                    s = cl.user_stories(user_id)
+                    s = InstagramApi().get_user_stories(username=user)["data"]
                     user_stories.update({user:dict(s)})
                 except:
                     user_stories.update({user:None})
-
             return dict(success="User stories fetch successful", status=200, data=user_stories)
         except Exception as error:
             print(error)
@@ -28,20 +23,11 @@ class InstagramService:
 
     def get_recent_post(self, **kwargs):
         username = list(kwargs.get("username").split(","))
-        cl = self.cl
-        print(username)
         try:
             data={}
             for user in username:
-                user_id = cl.user_id_from_username(user)
-                print(user_id)
-
-                user_media = cl.user_medias_v1(user_id= user_id, amount= 3)
-                print(user_media)
-                if len(user_media) > 0:
-                    data.update({user:user_media[0]})
-                else:
-                    data.update({user:404})
+                user_media = InstagramApi().get_user_posts(username=user)["data"]
+                data.update({user:user_media})
             return dict(success="User stories fetch successful", status=200, data=data)
 
         except Exception as error:

@@ -19,7 +19,7 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
     def stories(self, request):
         serialized_data = inline_serializer(
             fields={
-                "username": serializers.CharField(max_length=50),
+                "username": serializers.CharField(max_length=500),
             },
             data=request.data,
         )
@@ -41,7 +41,7 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
     def recent_post(self, request):
         serialized_data = inline_serializer(
             fields={
-                "username": serializers.CharField(max_length=50),
+                "username": serializers.CharField(max_length=500),
             },
             data=request.data,
         )
@@ -63,7 +63,7 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
     def latest_feed(self, request):
         serialized_data = inline_serializer(
             fields={
-                "username": serializers.CharField(max_length=50),
+                "username": serializers.CharField(max_length=500),
             },
             data=request.data,
         )
@@ -85,7 +85,7 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
     def latest_feed(self, request):
         serialized_data = inline_serializer(
             fields={
-                "username": serializers.CharField(max_length=50),
+                "username": serializers.CharField(max_length=500),
             },
             data=request.data,
         )

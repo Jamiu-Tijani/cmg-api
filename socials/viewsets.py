@@ -34,6 +34,28 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
     @action(
         detail=False,
         methods=["post"],
+        url_path="instagram/stories-feeds",
+        permission_classes=[AllowAny],
+    )
+    @transaction.atomic
+    def stories_feeds(self, request):
+        serialized_data = inline_serializer(
+            fields={
+                "username": serializers.CharField(max_length=500),
+            },
+            data=request.data,
+        )
+        errors = self.validate_serializer(serialized_data)
+        if errors:
+            return errors
+
+        response = InstagramService().get_stories_feeds(**serialized_data.validated_data)
+
+        return self.response(response)
+
+    @action(
+        detail=False,
+        methods=["post"],
         url_path="instagram/recent-post",
         permission_classes=[AllowAny],
     )

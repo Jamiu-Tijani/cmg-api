@@ -4,9 +4,8 @@ import uuid
 from django.core.cache import cache
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from cloudinary.models import CloudinaryField
-from datetime import datetime,timezone,timedelta
+from datetime import datetime, timezone, timedelta
 from django.conf import settings
-
 
 
 class Timestamp(models.Model):
@@ -32,19 +31,19 @@ class Account(User, Timestamp):
         (GENDER_FEMALE, "Female"),
         (OTHER, "Other"),
     )
-    auth_provider = models.CharField(default="cmg",max_length=20)
+    auth_provider = models.CharField(default="cmg", max_length=20)
     owner_id = models.UUIDField(default=uuid.uuid4, editable=False)
-    profile_picture = CloudinaryField('image')
+    profile_picture = CloudinaryField("image")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
     about = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return "%s" % self.user.username
-    
+
     @property
     def image_url(self):
         return self.profile_picture.url if self.profile_picture else None
-    
+
     @property
     def last_seen(self):
         return cache.get(f"seen_{self.user.username}")
@@ -61,8 +60,7 @@ class Account(User, Timestamp):
             return False
 
     def __str__(self):
-        return f'{self.username}'
-
+        return f"{self.username}"
 
 
 # this model Stores the data of the emails verified

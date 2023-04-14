@@ -10,6 +10,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from datetime import datetime
 
+
 class CustomPagination(PageNumberPagination):
     page_size = 8
 
@@ -48,7 +49,9 @@ class ResponseManager:
         if errors is None:
             errors = {}
         if errors:
-            return Response({"errors": errors, "message": message,"data":data}, status=status)
+            return Response(
+                {"errors": errors, "message": message, "data": data}, status=status
+            )
         return Response({"data": data, "message": message}, status=status)
 
     @staticmethod
@@ -106,6 +109,3 @@ class ResponseManager:
         return ResponseManager.handle_dict_paginated_response(
             paginator_instance, paginator_instance.paginate_queryset(queryset, request)
         )
-
-
-

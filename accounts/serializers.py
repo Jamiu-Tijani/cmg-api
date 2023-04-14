@@ -22,7 +22,7 @@ def inline_serializer(*, fields, data=None, **kwargs):
             },
             data=request.data)
     """
-    serializer_class = create_serializer_class(name='inline_serializer', fields=fields)
+    serializer_class = create_serializer_class(name="inline_serializer", fields=fields)
 
     if data is not None:
         return serializer_class(data=data, **kwargs)
@@ -36,20 +36,20 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
     def validate_auth_token(self, auth_token):
         user_data = google.Google.validate(auth_token)
         try:
-            user_data['sub']
+            user_data["sub"]
         except:
             raise serializers.ValidationError(
-                'The token is invalid or expired. Please login again.'
+                "The token is invalid or expired. Please login again."
             )
-        print(user_data['aud'])
-        if user_data['aud'] != settings.GOOGLE_CLIENT_ID:
+        print(user_data["aud"])
+        if user_data["aud"] != settings.GOOGLE_CLIENT_ID:
+            raise AuthenticationFailed("oops, who are you?")
 
-            raise AuthenticationFailed('oops, who are you?')
-
-        user_id = user_data['sub']
-        email = user_data['email']
-        name = user_data['name']
-        provider = 'google'
+        user_id = user_data["sub"]
+        email = user_data["email"]
+        name = user_data["name"]
+        provider = "google"
 
         return ExternalServices.register_social_user(
-            provider=provider, user_id=user_id, email=email, name=name)
+            provider=provider, user_id=user_id, email=email, name=name
+        )

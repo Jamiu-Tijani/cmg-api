@@ -3,4 +3,4 @@
 # # Create your models here.
 
 # class Artist(models.Model):
-#     name = 
+#     name =

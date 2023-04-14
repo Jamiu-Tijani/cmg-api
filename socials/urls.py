@@ -8,4 +8,5 @@ router = DefaultRouter()
 router.register(r"get-socials", SocialsViewSet, basename="get_socials")
 
 urlpatterns = [
-    path("", include(router.urls)),]
+    path("", include(router.urls)),
+]

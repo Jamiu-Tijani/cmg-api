@@ -8,42 +8,71 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Account',
+            name="Account",
             fields=[
-                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='auth.user')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('auth_provider', models.CharField(default='cmg', max_length=20)),
-                ('owner_id', models.UUIDField(default=uuid.uuid4, editable=False)),
-                ('profile_picture', cloudinary.models.CloudinaryField(max_length=255, verbose_name='image')),
-                ('gender', models.CharField(blank=True, choices=[('m', 'Male'), ('f', 'Female'), ('o', 'Other')], max_length=1)),
-                ('about', models.TextField(blank=True, null=True)),
+                (
+                    "user_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="auth.user",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                ("auth_provider", models.CharField(default="cmg", max_length=20)),
+                ("owner_id", models.UUIDField(default=uuid.uuid4, editable=False)),
+                (
+                    "profile_picture",
+                    cloudinary.models.CloudinaryField(
+                        max_length=255, verbose_name="image"
+                    ),
+                ),
+                (
+                    "gender",
+                    models.CharField(
+                        blank=True,
+                        choices=[("m", "Male"), ("f", "Female"), ("o", "Other")],
+                        max_length=1,
+                    ),
+                ),
+                ("about", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
-            bases=('auth.user', models.Model),
+            bases=("auth.user", models.Model),
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='EmailToken',
+            name="EmailToken",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.CharField(blank=True, max_length=80, null=True)),
-                ('is_verified', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("email", models.CharField(blank=True, max_length=80, null=True)),
+                ("is_verified", models.BooleanField(default=False)),
             ],
         ),
     ]

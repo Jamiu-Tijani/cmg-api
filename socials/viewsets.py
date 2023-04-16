@@ -82,7 +82,7 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
         permission_classes=[AllowAny],
     )
     @transaction.atomic
-    def latest_feed(self, request):
+    def latest_tiktok_feed(self, request):
         serialized_data = inline_serializer(
             fields={
                 "username": serializers.CharField(max_length=500),

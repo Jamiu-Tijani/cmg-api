@@ -17,6 +17,14 @@ def scrape_latest_video(username):
         "strong", {"class": "tiktok-cpjh4r-StrongText edu4zum2"}
     ):
         user_latest_feed[username][data.get("data-e2e")] = data.text
+    user_latest_feed["followers_count"] = soup.find("strong",{"title":"Followers"}).text
+    user_latest_feed["total_user_likes"] = soup.find("strong",{"title":"Likes"}).text
+    user_latest_feed["following_count"] =soup.find("strong",{"title":"Following"}).text
+    user_latest_feed["user_profile_pic"] = soup.find("img",{"class":"tiktok-1zpj2q-ImgAvatar e1e9er4e1"}).get("src")
+    user_latest_feed["verified_status"] = False if soup.find("circle",{"fill":"#20D5EC"}) == None else True
+
+     
+
     return dict(
         message="User latest feed fetch successful", status=200, data=user_latest_feed
     )

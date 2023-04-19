@@ -22,9 +22,13 @@ def scrape_latest_video(username):
     user_latest_feed["following_count"] =soup.find("strong",{"title":"Following"}).text
     user_latest_feed["user_profile_pic"] = soup.find("img",{"class":"tiktok-1zpj2q-ImgAvatar e1e9er4e1"}).get("src")
     user_latest_feed["verified_status"] = False if soup.find("circle",{"fill":"#20D5EC"}) == None else True
-
-     
-
+    res = requests.get(f"https://api.douyin.wtf/tiktok_video_data/?tiktok_video_url={video_url}")
+    try:
+        for x in res.json()["aweme_list"]:
+            if "video" in x:
+                user_latest_feed[username]["video_url"] = x["video"]["play_addr"]["url_list"][0]
+    except Exception as error:
+        print(error)        
     return dict(
         message="User latest feed fetch successful", status=200, data=user_latest_feed
     )

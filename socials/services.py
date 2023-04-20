@@ -60,7 +60,7 @@ class TikTokService:
         data = {}
         for user in username:
             response = scrape_latest_video(username=user)
-            data.update(response["data"])
+            data.update(response)
         return dict(success="User stories fetch successful", status=200, data=data)
 
 

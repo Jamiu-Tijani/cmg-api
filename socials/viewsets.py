@@ -49,7 +49,9 @@ class SocialsViewSet(CustomResponseMixin, viewsets.ViewSet):
         if errors:
             return errors
 
-        response = InstagramService().get_stories_feeds(**serialized_data.validated_data)
+        response = InstagramService().get_stories_feeds(
+            **serialized_data.validated_data
+        )
 
         return self.response(response)
 

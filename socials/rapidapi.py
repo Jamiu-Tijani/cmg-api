@@ -9,7 +9,6 @@ class InstagramApi:
             "X-RapidAPI-Host": "instagram-scraper-2022.p.rapidapi.com",
         }
 
-
     def get_user_posts(self, username):
         url = self.base_url + "ig/posts_username/"
         params = {"user": username}
@@ -31,12 +30,17 @@ class InstagramApi:
         if response.status_code != 200:
             return dict(error="User not found", status=404, data=data)
         user_id = response.json()["id"]
-        user_details = requests.request("GET", self.base_url+"ig/info/", headers=self.headers, params={"id_user":user_id})
-        if user_details.status_code !=200:
+        user_details = requests.request(
+            "GET",
+            self.base_url + "ig/info/",
+            headers=self.headers,
+            params={"id_user": user_id},
+        )
+        if user_details.status_code != 200:
             return dict(error="User not found", status=404, data=data)
         user = {}
         stories_url = self.base_url + "ig/stories/"
-        user["followers_count"]  = user_details.json()["user"]["follower_count"]
+        user["followers_count"] = user_details.json()["user"]["follower_count"]
         user["following_count"] = user_details.json()["user"]["following_count"]
         stories = requests.request(
             "GET", stories_url, headers=self.headers, params={"id_user": user_id}
